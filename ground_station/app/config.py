@@ -3,9 +3,9 @@ Ground Station — Application Settings (Pydantic BaseSettings)
 Reads values from environment variables / .env file automatically.
 """
 from functools import lru_cache
-from typing import Any
+from typing import Annotated, Any
 from pydantic import field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     sensor_api_key: str = ""   # Set via SENSOR_API_KEY in .env; empty = ingestion disabled (fail-closed)
 
     # CORS Configuration
-    cors_origins: list[str] = [
+    cors_origins: Annotated[list[str], NoDecode] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",

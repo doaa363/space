@@ -149,7 +149,11 @@ def mock_db():
 
 
 @pytest.fixture
-def client(mock_db, test_settings):
+def client(mock_db, test_settings, monkeypatch):
+    # Do not connect to a real MongoDB during tests; the lifespan hook is stubbed.
+    import app.main as main_module
+    monkeypatch.setattr(main_module, "connect_db", AsyncMock())
+    monkeypatch.setattr(main_module, "close_db", AsyncMock())
     app.dependency_overrides[get_db] = lambda: mock_db
     app.dependency_overrides[get_settings] = lambda: test_settings
     with TestClient(app) as test_client:
