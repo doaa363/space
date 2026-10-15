@@ -221,19 +221,27 @@ export async function fetchTelemetry(params = {}) {
 }
 
 /**
- * Transmits a simulated ISS telemetry packet to the live backend
+ * Transmits a simulated ISS telemetry packet to the live backend.
+ * Strictly restricted to development mode to ensure public production clients
+ * cannot transmit telemetry packets or leak sensor credentials.
  */
 export async function transmitSimulationPacket(packet) {
+  if (import.meta.env.PROD) {
+    throw new Error(
+      "Telemetry transmission from the browser is disabled in production. Live telemetry must originate exclusively from the ISS onboard sensor unit."
+    );
+  }
+
   if (!SENSOR_KEY) {
-    console.warn('[ClimCam API] VITE_SENSOR_KEY is not configured. Telemetry transmission requires sensor authorization.');
+    throw new Error(
+      "VITE_SENSOR_KEY is not configured in local environment. Set it in .env.local to test sensor ingestion."
+    );
   }
 
   const headers = {
     'Content-Type': 'application/json',
+    'X-Sensor-Key': SENSOR_KEY,
   };
-  if (SENSOR_KEY) {
-    headers['X-Sensor-Key'] = SENSOR_KEY;
-  }
 
   const res = await fetch(`${API_BASE}/telemetry`, {
     method: 'POST',

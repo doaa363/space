@@ -97,71 +97,79 @@ project/
 
 ---
 
-## ⚡ Quick Start
+## ⚡ Quickstart
+
+> [!CAUTION]
+> **MANDATORY: Git LFS Initialization for Datasets & Models**
+> This repository stores raw hyperspectral cubes (`.mat`), processed numpy arrays (`.npz`), and neural network weights (`.tflite`, `.keras`) using **[Git Large File Storage (Git LFS)](https://git-lfs.com/)**.
+> If you clone without Git LFS, these files will only exist as 130-byte text pointers, and **Stage 1 & Stage 3 will fail to run**.
+>
+> Run the following commands immediately after cloning:
+> ```bash
+> git clone https://github.com/doaa363/space.git
+> cd space
+> git lfs install
+> git lfs pull
+> ```
 
 ### Prerequisites
 
 | Component | Version |
 |---|---|
 | Python | **3.11.x** (required for TensorFlow 2.21 compatibility) |
-| RAM (Pi) | ≥ 4 GB |
-| Storage | ≥ 500 MB free |
+| RAM (Pi / Local) | ≥ 4 GB |
+| Storage | ≥ 500 MB free (with LFS assets) |
 
-### 1. Set Up Isolated Environment
+### 1. Environment & Dependencies Setup
 ```bash
-# Install uv (fast Python package manager)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Create Python 3.11 virtual environment
+# Create an isolated Python 3.11 virtual environment
 uv venv .venv --python 3.11
-source .venv/bin/activate        # Linux / Raspberry Pi
+source .venv/bin/activate        # Linux / Raspberry Pi / macOS
 # .venv\Scripts\activate          # Windows PowerShell
+
+# Install all dependencies (AI pipeline, Ground Station, test suite)
+uv pip install -r requirements.txt
 ```
 
-### 2. Install Dependencies
+### 2. Run Automated Verification Tests (17/17 Pass)
 ```bash
-uv pip install numpy scipy scikit-learn tensorflow matplotlib
-# On Raspberry Pi, replace tensorflow with:
-# uv pip install tflite-runtime numpy scipy matplotlib
+# Runs full test suite without requiring an active MongoDB connection
+pytest ground_station/tests -v
 ```
 
 ### 3. Run Pipeline Stages in Order
-
 ```bash
-# Stage 1: Preprocessing & Index Extraction
+# Stage 1: Hyperspectral Preprocessing & Vegetation Indices Extraction
 python src/stage1_preprocess.py
 
 # Stage 2: Train & Quantize 1D-CNN Model (requires TensorFlow)
 python src/stage2_train_model.py
 
-# Stage 3: Onboard Edge Inference & Semantic Encoding
+# Stage 3: Onboard Edge Inference & Semantic Telemetry Encoding
 python src/stage3_edge_inference.py
 
-# Stage 4: Phase 4 — Deploy, Benchmark, ISS Sim & Test Reports
+# Stage 4: Deploy Benchmark, ISS Sim & Automated Test Reports
 python src/stage4_deploy_validate.py
 ```
 
-### 4. Ground Station, Tests & Dashboard
+### 4. Ground Station Backend & Dashboard
 
 ```bash
-# Install all dependencies (AI pipeline, Ground Station & Test suite)
-uv pip install -r requirements.txt
+# Prepare environment configuration
+cp ground_station/.env.example ground_station/.env
 
-# Run Ground Station Test Suite (16/16 tests pass without requiring live MongoDB)
-pytest ground_station/tests -v
-
-# Launch MongoDB Container with configured credentials
+# Launch MongoDB Container (requires MONGO_INITDB_ROOT_PASSWORD defined in .env)
 docker compose up -d
 
 # Start Ground Station FastAPI service
 uvicorn app.main:app --app-dir ground_station --host 0.0.0.0 --port 8000 --reload
 
-# Run Dashboard (React + Vite)
+# Start Earth Observation Dashboard (React + Vite)
 cd dashboard && npm install && npm run dev
 ```
 
 > [!NOTE]
-> For the browser dashboard to connect, verify that your frontend URL (default `http://localhost:5173`) is configured in `CORS_ORIGINS` inside `ground_station/.env`.
+> For the browser dashboard to connect, ensure that your dashboard origin (default `http://localhost:5173`) is configured in `CORS_ORIGINS` inside `ground_station/.env`.
 
 ---
 

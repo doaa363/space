@@ -112,12 +112,12 @@ export default function App() {
     };
 
     try {
-      if (backendOnline) {
+      if (backendOnline && import.meta.env.DEV) {
         await transmitSimulationPacket(simulatedPacket);
         showToast(`🛰️ Telemetry packet [${newSceneId}] transmitted to FastAPI & stored in MongoDB!`, 'success');
         await loadData(false);
       } else {
-        // Local simulation fallback
+        // Local simulation preview (active in production or when backend is offline)
         const mockDoc = {
           _id: `mock-${Date.now()}`,
           ...simulatedPacket,
@@ -129,7 +129,11 @@ export default function App() {
         };
         setTelemetryList((prev) => [mockDoc, ...prev]);
         setActiveRecord(mockDoc);
-        showToast(`🛰️ Simulated local pass [${newSceneId}] injected into dashboard feed!`, 'info');
+        if (import.meta.env.PROD) {
+          showToast(`🛰️ Local pass preview [${newSceneId}]. (Remote sensor transmission disabled in production)`, 'info');
+        } else {
+          showToast(`🛰️ Simulated local pass [${newSceneId}] injected into dashboard feed!`, 'info');
+        }
       }
     } catch (err) {
       showToast(`Simulation error: ${err.message}`, 'error');
