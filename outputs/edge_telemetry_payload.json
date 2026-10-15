@@ -1,0 +1,144 @@
+{
+  "mission": "ClimCam ISS Agricultural & Climate Monitor",
+  "telemetry_header": {
+    "sensor_id": "ClimCam-ISS-EXP1",
+    "platform": "ISS / Raspberry Pi Edge Unit",
+    "timestamp_utc": "2026-10-15T00:31:33.193954+00:00",
+    "spatial_grid": {
+      "rows": 512,
+      "columns": 217,
+      "total_pixels_analyzed": 111104
+    },
+    "scene_georeference": {
+      "center_lat": 36.6777,
+      "center_lon": -121.6555,
+      "pixel_resolution_m": 3.7
+    }
+  },
+  "scene_classification_distribution": {
+    "categories": {
+      "0": "Background / Mask",
+      "1": "Vegetation",
+      "2": "Hydration",
+      "3": "Desertification",
+      "4": "Urban"
+    },
+    "metrics": {
+      "vegetation_percentage": 12.77,
+      "hydration_percentage": 40.69,
+      "desertification_percentage": 30.27,
+      "urban_percentage": 16.27
+    }
+  },
+  "biophysical_indicators": {
+    "mean_ndvi": 0.1505,
+    "mean_ndwi": 0.5438,
+    "mean_ndre": 0.0889,
+    "vegetation_health_score": 0.0
+  },
+  "regions_of_interest": [
+    {
+      "roi_id": "ROI-DESERT-R0C1",
+      "anomaly_type": "HIGH_DESERTIFICATION_CONCENTRATION",
+      "severity": "MEDIUM",
+      "desertification_concentration_pct": 43.3,
+      "mean_moisture_ndwi": 0.554,
+      "bounding_box_pixels": {
+        "ymin": 0,
+        "xmin": 54,
+        "ymax": 128,
+        "xmax": 108
+      },
+      "estimated_gps": {
+        "latitude": 36.671308,
+        "longitude": -121.656416
+      }
+    },
+    {
+      "roi_id": "ROI-DESERT-R1C3",
+      "anomaly_type": "HIGH_DESERTIFICATION_CONCENTRATION",
+      "severity": "HIGH",
+      "desertification_concentration_pct": 81.7,
+      "mean_moisture_ndwi": 0.454,
+      "bounding_box_pixels": {
+        "ymin": 128,
+        "xmin": 162,
+        "ymax": 256,
+        "xmax": 216
+      },
+      "estimated_gps": {
+        "latitude": 36.675569,
+        "longitude": -121.65282
+      }
+    },
+    {
+      "roi_id": "ROI-DESERT-R2C3",
+      "anomaly_type": "HIGH_DESERTIFICATION_CONCENTRATION",
+      "severity": "HIGH",
+      "desertification_concentration_pct": 94.8,
+      "mean_moisture_ndwi": 0.398,
+      "bounding_box_pixels": {
+        "ymin": 256,
+        "xmin": 162,
+        "ymax": 384,
+        "xmax": 216
+      },
+      "estimated_gps": {
+        "latitude": 36.679831,
+        "longitude": -121.65282
+      }
+    },
+    {
+      "roi_id": "ROI-DESERT-R3C2",
+      "anomaly_type": "HIGH_DESERTIFICATION_CONCENTRATION",
+      "severity": "MEDIUM",
+      "desertification_concentration_pct": 40.3,
+      "mean_moisture_ndwi": 0.4,
+      "bounding_box_pixels": {
+        "ymin": 384,
+        "xmin": 108,
+        "ymax": 512,
+        "xmax": 162
+      },
+      "estimated_gps": {
+        "latitude": 36.684092,
+        "longitude": -121.654618
+      }
+    },
+    {
+      "roi_id": "ROI-DESERT-R3C3",
+      "anomaly_type": "HIGH_DESERTIFICATION_CONCENTRATION",
+      "severity": "HIGH",
+      "desertification_concentration_pct": 88.4,
+      "mean_moisture_ndwi": 0.38,
+      "bounding_box_pixels": {
+        "ymin": 384,
+        "xmin": 162,
+        "ymax": 512,
+        "xmax": 216
+      },
+      "estimated_gps": {
+        "latitude": 36.684092,
+        "longitude": -121.65282
+      }
+    }
+  ],
+  "active_alerts": [
+    {
+      "alert_id": "ALT-DESERT-1792024293",
+      "severity": "WARNING",
+      "type": "DESERTIFICATION_ENCROACHMENT",
+      "message": "Desertification/Bare Soil ratio (30.3%) exceeds safety threshold.",
+      "metric_trigger": "Desertification = 30.3% (> 28.0%)",
+      "recommendation": "Flag for soil stabilization and satellite trend tracking."
+    }
+  ],
+  "bandwidth_optimization": {
+    "raw_cube_size_bytes": 26552770,
+    "raw_cube_size_mb": 25.32,
+    "encoded_payload_size_bytes": 3590,
+    "encoded_payload_size_kb": 3.51,
+    "compression_ratio": "7396.3:1",
+    "bandwidth_saving_percentage": "99.986%"
+  }
+}

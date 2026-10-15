@@ -1,0 +1,71 @@
+==============================================================================
+  CLIMCAM ISS SYSTEM — PHASE 4 INTEGRATION & VALIDATION REPORT
+==============================================================================
+  Generated     : 2026-10-15T00:47:35.000511+00:00
+  Hardware      : Raspberry Pi 4B (Simulated on x86/x64)
+  TFLite Backend: tensorflow.lite
+  Overall Verdict: ✅ PASS
+
+──────────────────────────────────────────────────────────────────────────────
+  KPI VALIDATION RESULTS
+──────────────────────────────────────────────────────────────────────────────
+  ✅  inference_time
+       value_seconds               : 8.857127700001001
+       threshold_seconds           : 30.0
+       passed                      : True
+       margin_seconds              : 21.14
+  ✅  compression_ratio
+       value                       : 175359.50483558993
+       threshold                   : 100.0
+       passed                      : True
+       margin                      : 175259.5
+  ✅  model_confidence
+       value_pct                   : 79.67
+       threshold_pct               : 75.0
+       passed                      : True
+
+──────────────────────────────────────────────────────────────────────────────
+  PERFORMANCE BENCHMARKS (Per Pipeline Stage)
+──────────────────────────────────────────────────────────────────────────────
+  Stage : Data Load
+       Elapsed              : 1.2256 s
+       Peak Memory          : 172.975 MB
+       Throughput           : 90655.2 px/s
+
+  Stage : Edge Inference
+       Elapsed              : 9.5236 s
+       Peak Memory          : 172.922 MB
+       Throughput           : 11666.2 px/s
+       KPI Passed           : YES ✅
+
+  Stage : Semantic Encoder
+       Elapsed              : 0.0111 s
+       Peak Memory          : 0.955 MB
+       Throughput           : 0 px/s
+
+──────────────────────────────────────────────────────────────────────────────
+  SCENE CLASSIFICATION DISTRIBUTION
+──────────────────────────────────────────────────────────────────────────────
+  Vegetation                    : 12.77%
+  Hydration                     : 40.69%
+  Desertification               : 30.27%
+  Urban                         : 16.27%
+
+──────────────────────────────────────────────────────────────────────────────
+  ISS PASS SIMULATION — EAST AFRICA
+──────────────────────────────────────────────────────────────────────────────
+  Total Overflight Events : 2
+  HIGH Priority Captures  : 1
+  Targets Covered         : Kenya - Nairobi, Kenya - Lake Victoria
+
+  Top Scheduled Captures:
+    [HIGH  ] Kenya - Nairobi                     @ 2026-10-15T04:38:54Z  dist=189.76 km
+    [MEDIUM] Kenya - Lake Victoria               @ 2026-10-15T04:38:54Z  dist=240.79 km
+
+──────────────────────────────────────────────────────────────────────────────
+  ACTIVE ALERTS
+──────────────────────────────────────────────────────────────────────────────
+  [WARNING] DESERTIFICATION_ENCROACHMENT
+       Desertification 30.27% exceeds 28.0% threshold.
+
+==============================================================================

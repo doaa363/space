@@ -1,0 +1,107 @@
+{
+  "report_meta": {
+    "project": "ClimCam ISS Hyperspectral AI System",
+    "phase": "Phase 4: Integration & Validation",
+    "generated_at_utc": "2026-10-15T00:47:35.000511+00:00",
+    "hardware_target": "Raspberry Pi 4B (Simulated on x86/x64)",
+    "backend_engine": "tensorflow.lite",
+    "overall_verdict": "PASS"
+  },
+  "kpi_validation": {
+    "inference_time": {
+      "value_seconds": 8.857127700001001,
+      "threshold_seconds": 30.0,
+      "passed": true,
+      "margin_seconds": 21.14
+    },
+    "compression_ratio": {
+      "value": 175359.50483558993,
+      "threshold": 100.0,
+      "passed": true,
+      "margin": 175259.5
+    },
+    "model_confidence": {
+      "value_pct": 79.67,
+      "threshold_pct": 75.0,
+      "passed": true
+    }
+  },
+  "performance_benchmarks": {
+    "total_pipeline_seconds": 10.7603,
+    "stage_metrics": {
+      "Data Load": {
+        "elapsed_s": 1.2256,
+        "peak_mem_mb": 172.975,
+        "throughput": 90655.2,
+        "kpi_passed": null
+      },
+      "Edge Inference": {
+        "elapsed_s": 9.5236,
+        "peak_mem_mb": 172.922,
+        "throughput": 11666.2,
+        "kpi_passed": true
+      },
+      "Semantic Encoder": {
+        "elapsed_s": 0.0111,
+        "peak_mem_mb": 0.955,
+        "throughput": 0,
+        "kpi_passed": null
+      }
+    },
+    "backend": "tensorflow.lite",
+    "hardware_target": "Raspberry Pi 4B / Jetson Nano"
+  },
+  "scene_classification": {
+    "Vegetation": 12.77,
+    "Hydration": 40.69,
+    "Desertification": 30.27,
+    "Urban": 16.27
+  },
+  "iss_pass_simulation": {
+    "total_passes_detected": 2,
+    "high_priority_passes": 1,
+    "targets_covered": [
+      "Kenya - Nairobi",
+      "Kenya - Lake Victoria"
+    ],
+    "scheduled_captures": [
+      {
+        "target_name": "Kenya - Nairobi",
+        "target_lat": -1.2921,
+        "target_lon": 36.8219,
+        "iss_lat": -1.8215,
+        "iss_lon": 38.4449,
+        "iss_altitude_km": 423.1,
+        "closest_dist_km": 189.76,
+        "acquisition_time_utc": "2026-10-15T04:38:54.095702+00:00",
+        "scene_capture": true,
+        "priority": "HIGH"
+      },
+      {
+        "target_name": "Kenya - Lake Victoria",
+        "target_lat": -0.1375,
+        "target_lon": 37.0833,
+        "iss_lat": -1.8215,
+        "iss_lon": 38.4449,
+        "iss_altitude_km": 423.1,
+        "closest_dist_km": 240.79,
+        "acquisition_time_utc": "2026-10-15T04:38:54.095702+00:00",
+        "scene_capture": true,
+        "priority": "MEDIUM"
+      }
+    ]
+  },
+  "active_alerts": [
+    {
+      "severity": "WARNING",
+      "type": "DESERTIFICATION_ENCROACHMENT",
+      "message": "Desertification 30.27% exceeds 28.0% threshold.",
+      "recommendation": "Flag for soil stabilization and trend tracking."
+    }
+  ],
+  "system_compliance": {
+    "space_grade_memory_footprint": 172.922,
+    "bandwidth_compression_ratio": "175359.5:1",
+    "telemetry_payload_kb": null
+  }
+}

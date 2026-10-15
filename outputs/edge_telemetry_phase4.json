@@ -1,0 +1,30 @@
+{
+  "mission": "ClimCam ISS East Africa Monitor",
+  "sensor_id": "ClimCam-ISS-EXP1",
+  "timestamp": "2026-10-15T00:47:34.959695+00:00",
+  "distribution": {
+    "Vegetation": 12.77,
+    "Hydration": 40.69,
+    "Desertification": 30.27,
+    "Urban": 16.27
+  },
+  "alerts": [
+    {
+      "severity": "WARNING",
+      "type": "DESERTIFICATION_ENCROACHMENT",
+      "message": "Desertification 30.27% exceeds 28.0% threshold.",
+      "recommendation": "Flag for soil stabilization and trend tracking."
+    }
+  ],
+  "biophysical": {
+    "mean_ndwi": 0.5438,
+    "mean_ndvi": 0.1505,
+    "mean_ndre": 0.0889
+  },
+  "bandwidth": {
+    "raw_cube_mb": 86.461,
+    "payload_kb": 0.505,
+    "compression_ratio": 175359.5,
+    "bandwidth_saving_%": 99.9994
+  }
+}
