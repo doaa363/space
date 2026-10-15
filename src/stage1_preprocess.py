@@ -6,6 +6,18 @@ Simulates satellite onboard hyperspectral calibration and feature generation.
 
 import os
 import sys
+
+# UTF-8 stdout configuration for clean cross-platform logging
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
+# Ensure project root is in sys.path for direct script execution
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
 import numpy as np
 import matplotlib.pyplot as plt
 from src.preprocessing import HyperspectralPreprocessor, SALINAS_CLASSES
@@ -17,10 +29,10 @@ def main():
     print("=" * 70)
 
     # File paths
-    data_path = os.path.join("archive", "Salinas_corrected.mat")
-    gt_path = os.path.join("archive", "Salinas_gt.mat")
-    output_dir = "outputs"
-    cache_dir = os.path.join("data", "processed")
+    data_path = os.path.join(BASE_DIR, "archive", "Salinas_corrected.mat")
+    gt_path = os.path.join(BASE_DIR, "archive", "Salinas_gt.mat")
+    output_dir = os.path.join(BASE_DIR, "outputs")
+    cache_dir = os.path.join(BASE_DIR, "data", "processed")
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(cache_dir, exist_ok=True)
 
@@ -99,7 +111,7 @@ def main():
     # Visualization D: Spectral Signatures (Crop & Disease Profiles)
     signatures = preprocessor.compute_spectral_signatures()
     plt.figure(figsize=(14, 6))
-    
+
     # Plot key representative crops and fallow fields
     selected_classes = [1, 3, 7, 8, 10, 11, 15]  # Broccoli, Fallow, Celery, Grapes, Corn, Lettuce, Vinyard
     colors = plt.cm.tab10(np.linspace(0, 1, len(selected_classes)))

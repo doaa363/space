@@ -6,6 +6,10 @@ from .telemetry import (
     TelemetryAck,
     PaginatedTelemetry,
     Alert,
+    ClassificationDistribution,
+    BiophysicalIndicators,
+    SceneGeoreference,
+    BandwidthInfo,
 )
 
 __all__ = [
@@ -15,4 +19,8 @@ __all__ = [
     "TelemetryAck",
     "PaginatedTelemetry",
     "Alert",
+    "ClassificationDistribution",
+    "BiophysicalIndicators",
+    "SceneGeoreference",
+    "BandwidthInfo",
 ]

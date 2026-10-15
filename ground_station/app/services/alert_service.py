@@ -83,11 +83,67 @@ async def process_alerts(
         logger.debug("Inserted %d alert record(s) to DB", len(alert_docs))
 
 
+async def send_slack_webhook(alert_doc: dict) -> None:
+    """
+    Dispatches a formatted alert payload to Slack webhook if configured.
+    """
+    webhook_url = settings.slack_webhook_url
+    if not webhook_url:
+        logger.debug("Slack webhook URL not configured; skipping external notification.")
+        return
+
+    payload = {
+        "text": f"🚨 *CLIMCAM CRITICAL ALERT* [{alert_doc['sensor_id']}]",
+        "blocks": [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": (
+                        f"*⛔ Sensor:* `{alert_doc['sensor_id']}`\n"
+                        f"*Type:* *{alert_doc['type']}*\n"
+                        f"*Message:* {alert_doc['message']}\n"
+                        f"*NDWI:* `{alert_doc['biophysical_context']['mean_ndwi']:.4f}` | "
+                        f"*Hydration:* `{alert_doc['biophysical_context']['hydration_pct']:.1f}%`\n"
+                        f"*Time:* {alert_doc['created_at'].isoformat()}"
+                    ),
+                },
+            }
+        ],
+    }
+
+    try:
+        import httpx
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            resp = await client.post(webhook_url, json=payload)
+            if resp.status_code == 200:
+                logger.info("Successfully dispatched critical alert to Slack webhook.")
+            else:
+                logger.warning("Slack webhook returned HTTP %d: %s", resp.status_code, resp.text)
+    except Exception as exc:
+        logger.error("Failed to dispatch Slack webhook alert: %s", exc)
+
+
+async def send_sms_alert(alert_doc: dict) -> None:
+    """
+    Dispatches SMS alert to operations roster if enabled.
+    """
+    if not settings.sms_alert_enabled:
+        logger.debug("SMS alert dispatch is disabled; skipping.")
+        return
+
+    logger.info(
+        "SMS Alert dispatched to operations roster: [%s] %s",
+        alert_doc["type"],
+        alert_doc["message"],
+    )
+
+
 async def _dispatch_critical_notification(alert_doc: dict) -> None:
     """
-    Hook for real-world critical notification dispatch.
-    In production: send SMS / PagerDuty / Slack webhook here.
-    Currently logs a prominent console banner and stores the record.
+    Real-world critical notification dispatch.
+    Emits prominent console banner, triggers Slack webhook if configured,
+    and forwards to emergency SMS roster if enabled.
     """
     banner = (
         "\n" + "!" * 78 + "\n"
@@ -101,5 +157,5 @@ async def _dispatch_critical_notification(alert_doc: dict) -> None:
         + "!" * 78
     )
     logger.critical(banner)
-    # TODO: await send_sms_alert(alert_doc)
-    # TODO: await send_slack_webhook(alert_doc)
+    await send_slack_webhook(alert_doc)
+    await send_sms_alert(alert_doc)

@@ -1,0 +1,24 @@
+# ==============================================================================
+# ClimCam ISS Hyperspectral AI — Root Dependencies (Stages 1-4 & Inference)
+# ==============================================================================
+
+# Core Scientific & Hyperspectral Processing
+numpy>=1.26.0
+scipy>=1.11.0
+scikit-learn>=1.4.0
+matplotlib>=3.8.0
+pillow>=10.0.0
+h5py>=3.10.0
+
+# Deep Learning & Quantization (1D-CNN & TFLite)
+tensorflow>=2.15.0
+
+# Ground Station Backend & Async DB
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+motor>=3.5.0
+pymongo>=4.8.0
+pydantic>=2.8.0
+pydantic-settings>=2.4.0
+python-dotenv>=1.0.0
+requests>=2.31.0

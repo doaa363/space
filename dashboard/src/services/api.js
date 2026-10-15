@@ -4,8 +4,9 @@
  * Provides fallback mock data with East Africa ISS passes when backend is offline.
  */
 
-const API_BASE = 'http://127.0.0.1:8000/api';
-const SENSOR_KEY = 'REDACTED_HISTORICAL_TOKEN';
+const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://127.0.0.1:8000/api';
+// Never ship sensor credentials in client bundles. For local simulation, VITE_SENSOR_KEY can be provided.
+const SENSOR_KEY = import.meta.env.VITE_SENSOR_KEY ?? '';
 
 // High-fidelity fallback telemetry data (East Africa ISS passes)
 export const FALLBACK_TELEMETRY = [
@@ -223,17 +224,28 @@ export async function fetchTelemetry(params = {}) {
  * Transmits a simulated ISS telemetry packet to the live backend
  */
 export async function transmitSimulationPacket(packet) {
-  try {
-    const res = await fetch(`${API_BASE}/telemetry`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Sensor-Key': SENSOR_KEY,
-      },
-      body: JSON.stringify(packet),
-    });
-    return await res.json();
-  } catch (err) {
-    throw err;
+  if (!SENSOR_KEY) {
+    console.warn('[ClimCam API] VITE_SENSOR_KEY is not configured. Telemetry transmission requires sensor authorization.');
   }
+
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (SENSOR_KEY) {
+    headers['X-Sensor-Key'] = SENSOR_KEY;
+  }
+
+  const res = await fetch(`${API_BASE}/telemetry`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(packet),
+  });
+
+  if (!res.ok) {
+    const errBody = await res.json().catch(() => ({}));
+    throw new Error(errBody.detail || `Server returned HTTP ${res.status}`);
+  }
+
+  return await res.json();
 }
+

@@ -83,12 +83,13 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # ── CORS (allow dashboard & internal tooling) ─────────────────────────
+    # ── CORS (allow dashboard & internal tooling from configured origins) ─
+    cors_origins = settings.cors_origins if settings.cors_origins else ["http://localhost:5173", "http://127.0.0.1:5173"]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],   # Tighten to specific origins in production
+        allow_origins=cors_origins,
         allow_credentials=True,
-        allow_methods=["*"],
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["*"],
     )
 

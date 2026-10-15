@@ -8,6 +8,7 @@ GET  /api/health     — Liveness / readiness probe.
 from __future__ import annotations
 
 import logging
+import secrets
 from datetime import datetime, timezone
 from typing import Annotated, Literal
 
@@ -16,7 +17,7 @@ from bson.errors import InvalidId
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Header
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
-from app.config import get_settings
+from app.config import get_settings, Settings
 from app.database import get_db
 from app.models import (
     TelemetryInbound,
@@ -35,12 +36,21 @@ settings = get_settings()
 # Security Dependency
 # ─────────────────────────────────────────────────────────────────────────────
 
-def verify_sensor_key(x_sensor_key: Annotated[str | None, Header()] = None) -> str:
+def verify_sensor_key(
+    x_sensor_key: Annotated[str | None, Header()] = None,
+    current_settings: Settings = Depends(get_settings),
+) -> str:
     """
     Validates the X-Sensor-Key header sent by the ISS unit.
-    Raises HTTP 401 if missing or invalid.
+    - Fail-closed: returns HTTP 503 if sensor ingestion is not configured on the server.
+    - Constant-time comparison: uses secrets.compare_digest to prevent timing attacks.
+    - Raises HTTP 401 if missing or invalid.
     """
-    if x_sensor_key is None or x_sensor_key != settings.sensor_api_key:
+    expected = current_settings.sensor_api_key
+    if not expected:
+        # Fail closed: refuse ingestion if no key is configured on the server
+        raise HTTPException(status_code=503, detail="Sensor ingestion is not configured.")
+    if x_sensor_key is None or not secrets.compare_digest(x_sensor_key, expected):
         raise HTTPException(status_code=401, detail="Invalid or missing X-Sensor-Key header.")
     return x_sensor_key
 

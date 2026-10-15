@@ -27,6 +27,14 @@ htmlcov/
 .env.*.local
 *.env
 !.env.example
+!ground_station/.env.example
+!dashboard/.env.example
+ground_station/.env
+ground_station/.env.*
+dashboard/.env
+dashboard/.env.local
+dashboard/.env.*.local
+
 
 # ── Node.js / React Frontend (Dashboard) ─────────────────────────────────────
 node_modules/
