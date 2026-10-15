@@ -8,6 +8,7 @@ from __future__ import annotations
 import logging
 from datetime import datetime, timezone
 
+import httpx
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.config import get_settings
 from app.models import TelemetryInbound
@@ -113,7 +114,6 @@ async def send_slack_webhook(alert_doc: dict) -> None:
     }
 
     try:
-        import httpx
         async with httpx.AsyncClient(timeout=5.0) as client:
             resp = await client.post(webhook_url, json=payload)
             if resp.status_code == 200:
@@ -127,13 +127,14 @@ async def send_slack_webhook(alert_doc: dict) -> None:
 async def send_sms_alert(alert_doc: dict) -> None:
     """
     Dispatches SMS alert to operations roster if enabled.
+    Note: SMS provider integration is not configured — logs clear warning.
     """
     if not settings.sms_alert_enabled:
         logger.debug("SMS alert dispatch is disabled; skipping.")
         return
 
-    logger.info(
-        "SMS Alert dispatched to operations roster: [%s] %s",
+    logger.warning(
+        "SMS alert triggered for [%s] %s, but SMS gateway provider integration is not implemented.",
         alert_doc["type"],
         alert_doc["message"],
     )

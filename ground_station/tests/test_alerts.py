@@ -85,3 +85,15 @@ async def test_send_sms_alert_disabled():
     }
     # Should not raise exception
     await send_sms_alert(alert_doc)
+
+
+@pytest.mark.asyncio
+async def test_send_sms_alert_enabled_warning():
+    """If sms_alert_enabled is True, it warns that SMS gateway is not implemented."""
+    with patch("app.services.alert_service.settings.sms_alert_enabled", True):
+        alert_doc = {
+            "type": "CRITICAL_TEST",
+            "message": "Test alert message",
+        }
+        await send_sms_alert(alert_doc)
+

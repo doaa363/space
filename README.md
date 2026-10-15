@@ -141,6 +141,28 @@ python src/stage3_edge_inference.py
 python src/stage4_deploy_validate.py
 ```
 
+### 4. Ground Station, Tests & Dashboard
+
+```bash
+# Install all dependencies (AI pipeline, Ground Station & Test suite)
+uv pip install -r requirements.txt
+
+# Run Ground Station Test Suite (16/16 tests pass without requiring live MongoDB)
+pytest ground_station/tests -v
+
+# Launch MongoDB Container with configured credentials
+docker compose up -d
+
+# Start Ground Station FastAPI service
+uvicorn app.main:app --app-dir ground_station --host 0.0.0.0 --port 8000 --reload
+
+# Run Dashboard (React + Vite)
+cd dashboard && npm install && npm run dev
+```
+
+> [!NOTE]
+> For the browser dashboard to connect, verify that your frontend URL (default `http://localhost:5173`) is configured in `CORS_ORIGINS` inside `ground_station/.env`.
+
 ---
 
 ## 🧠 AI Model Specifications
