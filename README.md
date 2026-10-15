@@ -102,7 +102,7 @@ project/
 > [!CAUTION]
 > **MANDATORY: Git LFS Initialization for Datasets & Models**
 > This repository stores raw hyperspectral cubes (`.mat`), processed numpy arrays (`.npz`), and neural network weights (`.tflite`, `.keras`) using **[Git Large File Storage (Git LFS)](https://git-lfs.com/)**.
-> If you clone without Git LFS, these files will only exist as 130-byte text pointers, and **Stage 1 & Stage 3 will fail to run**.
+> If you clone without Git LFS, these files will only exist as 133 bytes text pointers, and **Stage 1 & Stage 3 will fail to run**.
 >
 > Run the following commands immediately after cloning:
 > ```bash
